@@ -1,0 +1,547 @@
+--create database hotel_db
+
+use hotel_db
+/**
+CREATE TABLE dbo.HotelGuest
+(
+    GuestID           INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName         VARCHAR(50)  NOT NULL,
+    LastName          VARCHAR(50)  NOT NULL,
+    Gender            CHAR(1)      NOT NULL,
+    DateOfBirth       DATE         NOT NULL,
+    PhoneNumber       VARCHAR(15)  NOT NULL,
+    Email             VARCHAR(100) NOT NULL,
+    Country           VARCHAR(50)  NOT NULL,
+    City              VARCHAR(50)  NOT NULL,
+    LoyaltyLevel      VARCHAR(20)  NOT NULL,
+    TotalStays        INT          NOT NULL,
+    TotalNights       INT          NOT NULL,
+    TotalSpend        DECIMAL(10,2) NOT NULL,
+    IsActive          BIT          NOT NULL,
+    SignupDate        DATE         NOT NULL,
+    LastStayDate      DATE         NULL,
+    PreferredRoomType VARCHAR(20)  NOT NULL,
+    Notes             VARCHAR(255) NULL
+);
+
+-- ==========================
+-- 2. HotelBooking fact table
+-- ==========================
+CREATE TABLE dbo.HotelBooking
+(
+    BookingID       INT IDENTITY(1,1) PRIMARY KEY,
+    GuestID         INT           NOT NULL,
+    RoomNumber      INT           NOT NULL,
+    RoomType        VARCHAR(20)   NOT NULL,
+    CheckInDate     DATE          NOT NULL,
+    CheckOutDate    DATE          NOT NULL,
+    Nights          INT           NOT NULL,
+    NumGuests       INT           NOT NULL,
+    BookingStatus   VARCHAR(20)   NOT NULL,
+    BookingChannel  VARCHAR(20)   NOT NULL,
+    PaymentMethod   VARCHAR(20)   NOT NULL,
+    BaseAmount      DECIMAL(10,2) NOT NULL,
+    TaxAmount       DECIMAL(10,2) NOT NULL,
+    DiscountAmount  DECIMAL(10,2) NOT NULL,
+    TotalAmount     DECIMAL(10,2) NOT NULL,
+    CreatedDate     DATETIME      NOT NULL,
+    LastUpdatedDate DATETIME      NOT NULL,
+    SpecialRequest  VARCHAR(255)  NULL,
+    CONSTRAINT FK_HotelBooking_HotelGuest
+    FOREIGN KEY (GuestID) REFERENCES dbo.HotelGuest(GuestID)
+);
+**/
+/**
+INSERT INTO dbo.HotelGuest
+(FirstName, LastName, Gender, DateOfBirth, PhoneNumber, Email, Country, City,
+ LoyaltyLevel, TotalStays, TotalNights, TotalSpend, IsActive,
+ SignupDate, LastStayDate, PreferredRoomType, Notes)
+VALUES
+('Amit','Sharma','M','1985-01-15','9990000001','amit.sharma@example.com','India','Delhi',
+ 'Gold',12,30,75000.00,1,'2018-02-10','2024-12-20','Deluxe','Prefers high floor'),
+('Neha','Verma','F','1990-05-21','9990000002','neha.verma@example.com','India','Mumbai',
+ 'Silver',5,12,28000.00,1,'2019-03-12','2024-10-05','Standard','Late check-out'),
+('Rahul','Mehta','M','1988-07-09','9990000003','rahul.mehta@example.com','India','Bangalore',
+ 'Bronze',3,7,12000.00,1,'2020-01-05','2023-11-18','Standard',NULL),
+('Priya','Nair','F','1992-11-30','9990000004','priya.nair@example.com','India','Chennai',
+ 'Gold',10,25,68000.00,1,'2018-09-01','2024-08-27','Suite','Allergic to peanuts'),
+('Rahul','Singh','M','1979-03-11','9990000005','rahul.singh@example.com','India','Pune',
+ 'Platinum',20,60,150000.00,1,'2017-05-15','2025-01-02','Suite','VIP guest'),
+('Karan','Kapoor','M','1987-12-02','9990000006','karan.kapoor@example.com','India','Delhi',
+ 'Silver',6,15,36000.00,1,'2019-06-18','2024-09-10','Deluxe',NULL),
+('Sneha','Rao','F','1993-04-19','9990000007','sneha.rao@example.com','India','Hyderabad',
+ 'Bronze',2,5,9000.00,1,'2021-02-01','2022-12-20','Standard',NULL),
+('Vikas','Yadav','M','1984-08-25','9990000008','vikas.yadav@example.com','India','Jaipur',
+ 'Gold',9,22,64000.00,1,'2018-11-11','2024-07-14','Deluxe','Early check-in'),
+('Anita','Gupta','F','1986-09-09','9990000009','anita.gupta@example.com','India','Kolkata',
+ 'Silver',4,10,26000.00,1,'2019-10-05','2024-06-03','Deluxe',NULL),
+('Rohit','Jain','M','1991-02-14','9990000010','rohit.jain@example.com','India','Delhi',
+ 'Bronze',1,2,4000.00,1,'2022-01-01','2022-01-03','Standard',NULL),
+
+('Manish','Arora','M','1983-06-18','9990000011','manish.arora@example.com','India','Delhi',
+ 'Gold',8,20,58000.00,1,'2018-04-04','2023-12-30','Deluxe',NULL),
+('Pooja','Mishra','F','1994-12-22','9990000012','pooja.mishra@example.com','India','Lucknow',
+ 'Silver',5,12,30000.00,1,'2020-07-19','2024-01-15','Standard',NULL),
+('Deepak','Saxena','M','1989-01-07','9990000013','deepak.saxena@example.com','India','Noida',
+ 'Bronze',2,4,8000.00,1,'2021-03-23','2022-05-20','Standard',NULL),
+('Meera','Reddy','F','1987-03-29','9990000014','meera.reddy@example.com','India','Hyderabad',
+ 'Gold',11,27,72000.00,1,'2018-08-10','2024-11-11','Suite','Anniversary traveller'),
+('Sanjay','Kulkarni','M','1978-10-05','9990000015','sanjay.kulkarni@example.com','India','Pune',
+ 'Platinum',18,55,140000.00,1,'2016-12-12','2025-01-05','Suite','Corporate account'),
+('Riya','Chopra','F','1995-07-17','9990000016','riya.chopra@example.com','India','Mumbai',
+ 'Silver',4,9,24000.00,1,'2020-09-09','2023-06-18','Deluxe',NULL),
+('Arjun','Malhotra','M','1992-05-02','9990000017','arjun.malhotra@example.com','India','Delhi',
+ 'Bronze',3,6,11000.00,1,'2021-01-20','2022-09-10','Standard',NULL),
+('Kavya','Joshi','F','1991-01-19','9990000018','kavya.joshi@example.com','India','Ahmedabad',
+ 'Gold',9,21,61000.00,1,'2018-03-30','2024-04-22','Deluxe','Prefers city view'),
+('Nitin','Bansal','M','1986-11-08','9990000019','nitin.bansal@example.com','India','Gurgaon',
+ 'Silver',6,14,34000.00,1,'2019-05-25','2023-09-29','Deluxe',NULL),
+
+('Alok','Sinha','M','1983-02-03','9990000020','alok.sinha@example.com','India','Patna',
+ 'Bronze',2,5,9000.00,1,'2021-04-14','2022-08-08','Standard',NULL),
+('Shruti','Desai','F','1990-06-11','9990000021','shruti.desai@example.com','India','Surat',
+ 'Gold',10,24,67000.00,1,'2018-06-21','2024-09-01','Suite',NULL),
+('Varun','Thakur','M','1988-09-27','9990000022','varun.thakur@example.com','India','Chandigarh',
+ 'Silver',5,11,29000.00,1,'2019-08-15','2023-10-19','Deluxe',NULL),
+('Sonali','Bhatt','F','1993-03-05','9990000023','sonali.bhatt@example.com','India','Indore',
+ 'Bronze',3,7,13000.00,1,'2020-02-29','2022-12-12','Standard',NULL),
+('Harsh','Goyal','M','1991-12-01','9990000024','harsh.goyal@example.com','India','Jaipur',
+ 'Gold',9,23,64000.00,1,'2018-10-20','2024-03-15','Deluxe',NULL),
+('Tanya','Saxena','F','1994-09-15','9990000025','tanya.saxena@example.com','India','Delhi',
+ 'Silver',4,10,26000.00,1,'2019-11-11','2023-02-10','Standard',NULL),
+('Abhishek','Rana','M','1987-04-23','9990000026','abhishek.rana@example.com','India','Shimla',
+ 'Bronze',2,5,9500.00,1,'2021-05-06','2022-11-01','Standard','Prefers mountain view'),
+('Divya','Singhal','F','1989-08-28','9990000027','divya.singhal@example.com','India','Delhi',
+ 'Gold',11,26,70000.00,1,'2018-01-17','2024-05-28','Suite',NULL),
+('Mohit','Bhatia','M','1985-10-19','9990000028','mohit.bhatia@example.com','India','Noida',
+ 'Silver',6,15,36000.00,1,'2019-02-02','2023-07-07','Deluxe',NULL),
+
+('Sapna','Kaul','F','1992-02-27','9990000029','sapna.kaul@example.com','India','Delhi',
+ 'Bronze',3,6,11500.00,1,'2020-06-16','2022-10-10','Standard',NULL),
+('Gaurav','Puri','M','1984-07-13','9990000030','gaurav.puri@example.com','India','Gurgaon',
+ 'Gold',8,19,56000.00,1,'2018-05-09','2024-02-22','Deluxe',NULL),
+('Anjali','Soni','F','1991-11-04','9990000031','anjali.soni@example.com','India','Bhopal',
+ 'Silver',5,12,30000.00,1,'2019-09-03','2023-03-11','Standard',NULL),
+('Rakesh','Panda','M','1982-01-22','9990000032','rakesh.panda@example.com','India','Bhubaneswar',
+ 'Bronze',2,4,8200.00,1,'2021-07-27','2022-06-30','Standard',NULL),
+('Sonia','Kakkar','F','1986-03-16','9990000033','sonia.kakkar@example.com','India','Amritsar',
+ 'Gold',9,22,63000.00,1,'2018-09-19','2024-01-30','Deluxe',NULL),
+('Tarun','Ahuja','M','1988-05-01','9990000034','tarun.ahuja@example.com','India','Delhi',
+ 'Silver',4,9,24500.00,1,'2019-12-12','2023-01-10','Standard',NULL),
+('Muskan','Lal','F','1993-07-24','9990000035','muskan.lal@example.com','India','Kanpur',
+ 'Bronze',3,7,13500.00,1,'2020-08-08','2022-09-19','Standard',NULL),
+('Yash','Khanna','M','1990-10-10','9990000036','yash.khanna@example.com','India','Delhi',
+ 'Gold',10,24,68000.00,1,'2018-02-14','2024-06-06','Suite',NULL),
+('Radhika','Bose','F','1987-09-07','9990000037','radhika.bose@example.com','India','Kolkata',
+ 'Silver',5,11,29500.00,1,'2019-03-18','2023-05-25','Deluxe',NULL),
+
+('Naveen','Sarin','M','1985-06-06','9990000038','naveen.sarin@example.com','India','Delhi',
+ 'Bronze',2,5,9800.00,1,'2021-01-01','2022-03-03','Standard',NULL),
+('Pallavi','Arun','F','1992-01-29','9990000039','pallavi.arun@example.com','India','Mumbai',
+ 'Gold',9,21,62000.00,1,'2018-07-07','2024-08-18','Deluxe',NULL),
+('Shivam','Garg','M','1993-11-12','9990000040','shivam.garg@example.com','India','Delhi',
+ 'Silver',4,9,25000.00,1,'2019-06-30','2023-09-09','Standard',NULL),
+('Monika','Paul','F','1989-04-26','9990000041','monika.paul@example.com','India','Delhi',
+ 'Bronze',3,6,11800.00,1,'2020-11-11','2022-12-01','Standard',NULL),
+('Aditya','Bajaj','M','1986-08-03','9990000042','aditya.bajaj@example.com','India','Nagpur',
+ 'Gold',8,18,55000.00,1,'2018-10-01','2023-11-05','Deluxe',NULL),
+('Simran','Gill','F','1991-02-09','9990000043','simran.gill@example.com','India','Ludhiana',
+ 'Silver',5,13,31000.00,1,'2019-01-20','2023-08-08','Standard',NULL),
+('Arnav','Sethi','M','1994-12-17','9990000044','arnav.sethi@example.com','India','Delhi',
+ 'Bronze',2,5,9300.00,1,'2021-09-09','2022-10-10','Standard',NULL),
+('Isha','Anand','F','1993-03-03','9990000045','isha.anand@example.com','India','Jaipur',
+ 'Gold',9,23,64000.00,1,'2018-04-04','2024-04-19','Suite',NULL),
+('Krish','Bhalla','M','1988-01-30','9990000046','krish.bhalla@example.com','India','Delhi',
+ 'Silver',6,14,35500.00,1,'2019-05-05','2023-02-15','Deluxe',NULL),
+
+('Nidhi','Manoj','F','1990-09-21','9990000047','nidhi.manoj@example.com','India','Mumbai',
+ 'Bronze',3,7,12800.00,1,'2020-03-07','2022-07-27','Standard',NULL),
+('Vivek','Rawat','M','1984-11-11','9990000048','vivek.rawat@example.com','India','Dehradun',
+ 'Gold',8,20,57500.00,1,'2018-12-25','2023-10-29','Deluxe',NULL),
+('Payal','Suri','F','1987-06-14','9990000049','payal.suri@example.com','India','Delhi',
+ 'Silver',5,12,30500.00,1,'2019-04-01','2023-01-20','Standard',NULL),
+('Ajay','Chawla','M','1982-02-18','9990000050','ajay.chawla@example.com','India','Delhi',
+ 'Bronze',2,5,9400.00,0,'2020-01-15',NULL,'Standard','Account inactive');
+ **/
+ /**
+ INSERT INTO dbo.HotelBooking
+(GuestID, RoomNumber, RoomType, CheckInDate, CheckOutDate, Nights, NumGuests,
+ BookingStatus, BookingChannel, PaymentMethod,
+ BaseAmount, TaxAmount, DiscountAmount, TotalAmount,
+ CreatedDate, LastUpdatedDate, SpecialRequest)
+VALUES
+(1,101,'Deluxe','2024-12-15','2024-12-18',3,2,
+ 'CheckedOut','Website','Card',
+ 15000.00,2700.00,1000.00,16700.00,
+ '2024-11-01','2024-12-18','Late check-out'),
+(1,102,'Deluxe','2024-06-10','2024-06-12',2,1,
+ 'CheckedOut','App','UPI',
+ 9000.00,1620.00,500.00,10120.00,
+ '2024-05-20','2024-06-12',NULL),
+(2,201,'Standard','2024-10-01','2024-10-03',2,2,
+ 'CheckedOut','Website','Card',
+ 6000.00,1080.00,0.00,7080.00,
+ '2024-09-05','2024-10-03','Near lift'),
+(2,202,'Standard','2023-12-20','2023-12-22',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5500.00,990.00,500.00,5990.00,
+ '2023-12-01','2023-12-22',NULL),
+(3,301,'Standard','2022-11-10','2022-11-11',1,1,
+ 'CheckedOut','Website','Online',
+ 3000.00,540.00,0.00,3540.00,
+ '2022-10-15','2022-11-11',NULL),
+(3,302,'Standard','2023-05-05','2023-05-07',2,2,
+ 'Cancelled','App','Card',
+ 6500.00,1170.00,0.00,7670.00,
+ '2023-04-01','2023-05-02','Free cancellation'),
+(4,401,'Suite','2024-08-20','2024-08-24',4,2,
+ 'CheckedOut','Website','Card',
+ 28000.00,5040.00,2000.00,31040.00,
+ '2024-07-10','2024-08-24','Anniversary decoration'),
+(4,402,'Suite','2023-01-10','2023-01-12',2,2,
+ 'CheckedOut','Agent','Card',
+ 14000.00,2520.00,0.00,16520.00,
+ '2022-12-10','2023-01-12',NULL),
+(5,501,'Suite','2025-01-01','2025-01-05',4,2,
+ 'CheckedIn','Website','Card',
+ 32000.00,5760.00,3000.00,34760.00,
+ '2024-12-01','2025-01-01','Airport pickup'),
+(5,502,'Suite','2024-04-02','2024-04-06',4,3,
+ 'CheckedOut','Agent','Card',
+ 30000.00,5400.00,2500.00,32900.00,
+ '2024-03-01','2024-04-06',NULL),
+
+(6,103,'Deluxe','2024-09-05','2024-09-07',2,2,
+ 'CheckedOut','App','UPI',
+ 9000.00,1620.00,500.00,10120.00,
+ '2024-08-15','2024-09-07',NULL),
+(7,303,'Standard','2022-12-19','2022-12-21',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5500.00,990.00,300.00,6190.00,
+ '2022-12-01','2022-12-21',NULL),
+(8,203,'Deluxe','2024-07-10','2024-07-13',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2024-06-20','2024-07-13','High floor'),
+(9,204,'Deluxe','2024-06-01','2024-06-03',2,2,
+ 'NoShow','Website','Card',
+ 9000.00,1620.00,0.00,10620.00,
+ '2024-05-15','2024-06-01',NULL),
+(10,304,'Standard','2022-01-01','2022-01-03',2,2,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2021-12-15','2022-01-03',NULL),
+(11,104,'Deluxe','2023-12-28','2023-12-31',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,800.00,15130.00,
+ '2023-12-01','2023-12-31',NULL),
+(12,205,'Standard','2024-01-10','2024-01-13',3,1,
+ 'CheckedOut','App','UPI',
+ 7500.00,1350.00,500.00,8350.00,
+ '2023-12-05','2024-01-13',NULL),
+(13,305,'Standard','2022-05-15','2022-05-19',4,2,
+ 'CheckedOut','Website','Card',
+ 10000.00,1800.00,0.00,11800.00,
+ '2022-04-20','2022-05-19',NULL),
+(14,403,'Suite','2024-11-05','2024-11-09',4,2,
+ 'CheckedOut','Website','Card',
+ 28000.00,5040.00,2000.00,31040.00,
+ '2024-10-01','2024-11-09',NULL),
+
+(15,503,'Suite','2025-01-03','2025-01-08',5,2,
+ 'Booked','Agent','Card',
+ 35000.00,6300.00,3000.00,38300.00,
+ '2024-12-10','2024-12-10','VIP airport pickup'),
+(16,206,'Deluxe','2023-06-10','2023-06-12',2,2,
+ 'CheckedOut','Website','Online',
+ 9000.00,1620.00,700.00,9920.00,
+ '2023-05-10','2023-06-12',NULL),
+(17,306,'Standard','2022-09-08','2022-09-10',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5500.00,990.00,0.00,6490.00,
+ '2022-08-20','2022-09-10',NULL),
+(18,207,'Deluxe','2024-04-20','2024-04-23',3,2,
+ 'CheckedOut','App','UPI',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2024-03-25','2024-04-23','City view'),
+(19,208,'Deluxe','2023-10-01','2023-10-04',3,2,
+ 'Cancelled','Website','Card',
+ 13500.00,2430.00,0.00,15930.00,
+ '2023-09-01','2023-09-28',NULL),
+(20,307,'Standard','2022-08-10','2022-08-12',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-07-25','2022-08-12',NULL),
+(21,404,'Suite','2024-09-01','2024-09-04',3,2,
+ 'CheckedOut','Website','Card',
+ 21000.00,3780.00,1500.00,23280.00,
+ '2024-08-01','2024-09-04',NULL),
+(22,209,'Deluxe','2023-10-20','2023-10-22',2,2,
+ 'CheckedOut','App','UPI',
+ 9000.00,1620.00,500.00,10120.00,
+ '2023-09-25','2023-10-22',NULL),
+(23,308,'Standard','2022-12-01','2022-12-03',2,1,
+ 'CheckedOut','Website','Card',
+ 5500.00,990.00,0.00,6490.00,
+ '2022-11-05','2022-12-03',NULL),
+
+(24,210,'Deluxe','2024-03-05','2024-03-08',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2024-02-10','2024-03-08',NULL),
+(25,309,'Standard','2023-02-14','2023-02-16',2,2,
+ 'CheckedOut','App','UPI',
+ 6000.00,1080.00,500.00,6580.00,
+ '2023-01-20','2023-02-16',NULL),
+(26,211,'Standard','2022-10-10','2022-10-13',3,2,
+ 'CheckedOut','Website','Online',
+ 7500.00,1350.00,0.00,8850.00,
+ '2022-09-15','2022-10-13','Mountain view'),
+(27,405,'Suite','2024-05-01','2024-05-05',4,2,
+ 'CheckedOut','Agent','Card',
+ 28000.00,5040.00,2000.00,31040.00,
+ '2024-04-05','2024-05-05',NULL),
+(28,212,'Deluxe','2023-07-10','2023-07-12',2,2,
+ 'CheckedOut','Website','Card',
+ 9000.00,1620.00,500.00,10120.00,
+ '2023-06-15','2023-07-12',NULL),
+(29,310,'Standard','2022-10-20','2022-10-22',2,1,
+ 'NoShow','Website','Card',
+ 5500.00,990.00,0.00,6490.00,
+ '2022-10-01','2022-10-20',NULL),
+(30,213,'Deluxe','2024-02-10','2024-02-13',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2024-01-15','2024-02-13',NULL),
+(31,311,'Standard','2023-03-01','2023-03-03',2,1,
+ 'CheckedOut','App','UPI',
+ 6000.00,1080.00,500.00,6580.00,
+ '2023-02-10','2023-03-03',NULL),
+(32,312,'Standard','2022-06-15','2022-06-17',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-06-01','2022-06-17',NULL),
+
+(33,214,'Deluxe','2024-01-20','2024-01-23',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2023-12-20','2024-01-23',NULL),
+(34,313,'Standard','2023-01-05','2023-01-07',2,1,
+ 'CheckedOut','App','UPI',
+ 6000.00,1080.00,500.00,6580.00,
+ '2022-12-20','2023-01-07',NULL),
+(35,314,'Standard','2022-09-10','2022-09-12',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-08-25','2022-09-12',NULL),
+(36,504,'Suite','2024-06-01','2024-06-05',4,2,
+ 'CheckedOut','Website','Card',
+ 28000.00,5040.00,2000.00,31040.00,
+ '2024-05-01','2024-06-05',NULL),
+(37,215,'Deluxe','2023-05-01','2023-05-04',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2023-04-10','2023-05-04',NULL),
+(38,315,'Standard','2022-03-15','2022-03-17',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-03-01','2022-03-17',NULL),
+(39,216,'Deluxe','2023-08-20','2023-08-23',3,2,
+ 'Cancelled','Website','Card',
+ 13500.00,2430.00,0.00,15930.00,
+ '2023-07-25','2023-08-18',NULL),
+(40,316,'Standard','2022-11-01','2022-11-03',2,2,
+ 'CheckedOut','App','UPI',
+ 6000.00,1080.00,500.00,6580.00,
+ '2022-10-15','2022-11-03',NULL),
+(41,406,'Suite','2024-02-15','2024-02-18',3,2,
+ 'CheckedOut','Website','Card',
+ 21000.00,3780.00,1500.00,23280.00,
+ '2024-01-20','2024-02-18',NULL),
+
+(42,217,'Deluxe','2023-09-05','2023-09-08',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2023-08-10','2023-09-08',NULL),
+(43,317,'Standard','2022-04-10','2022-04-12',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-03-25','2022-04-12',NULL),
+(44,218,'Deluxe','2024-03-20','2024-03-23',3,2,
+ 'CheckedOut','App','UPI',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2024-02-28','2024-03-23',NULL),
+(45,505,'Suite','2024-04-10','2024-04-14',4,2,
+ 'CheckedOut','Website','Card',
+ 28000.00,5040.00,2000.00,31040.00,
+ '2024-03-10','2024-04-14',NULL),
+(46,219,'Deluxe','2023-02-05','2023-02-08',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2023-01-10','2023-02-08',NULL),
+(47,318,'Standard','2022-07-01','2022-07-03',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 5000.00,900.00,0.00,5900.00,
+ '2022-06-20','2022-07-03',NULL),
+(48,220,'Deluxe','2023-11-10','2023-11-13',3,2,
+ 'CheckedOut','Website','Card',
+ 13500.00,2430.00,1000.00,14930.00,
+ '2023-10-15','2023-11-13',NULL),
+(49,319,'Standard','2023-01-25','2023-01-27',2,1,
+ 'CheckedOut','App','UPI',
+ 6000.00,1080.00,500.00,6580.00,
+ '2023-01-05','2023-01-27',NULL),
+(50,320,'Standard','2020-02-01','2020-02-03',2,1,
+ 'CheckedOut','WalkIn','Cash',
+ 4500.00,810.00,0.00,5310.00,
+ '2020-01-10','2020-02-03',NULL);
+ **/
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ --1.Front office wants a contact list of all active guests from Delhi to send a New Year promotional SMS. 
+ --Show FirstName, LastName, PhoneNumber, Email.
+
+ select FirstName,LastName,PhoneNumber,Email from HotelGuest where City = 'Delhi'
+
+ --2. Marketing team wants to know from which cities guests are coming to plan targeted campaigns. 
+ --List all distinct cities.
+
+ select distinct(City) from HotelGuest
+
+ --3.Revenue manager wants to review all cancelled or no-show bookings to study patterns. 
+ --Show BookingID, GuestID, BookingStatus, CheckInDate, RoomType.
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ select BookingID,GuestID,BookingStatus,CheckInDate,RoomType from HotelBooking where BookingStatus in ('Cancelled','NoShow')
+
+ --select distinct(BookingStatus)   from HotelBooking
+
+ --4.Management wants a list of Suite bookings where the TotalAmount > 30000 to identify high-value stays. 
+ --Show BookingID, GuestID, RoomNumber, TotalAmount.
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ select  BookingID, GuestID, RoomNumber, TotalAmount    from HotelBooking where TotalAmount > 30000
+
+ --5.Loyalty team wants to send gifts to Gold or Platinum guests whose TotalSpend > 60000. 
+ --Show GuestID, FirstName, LastName, LoyaltyLevel, TotalSpend.
+
+ select GuestID, FirstName, LastName, LoyaltyLevel, TotalSpend  from HotelGuest where TotalSpend > 60000
+
+ --6.Reservations team needs a report of all bookings with guest names. 
+ --Show BookingID, FirstName, LastName, RoomType, CheckInDate.
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ select hg.FirstName,hg.LastName,hb.CheckInDate,hb.BookingID  from  HotelGuest as hg
+
+ inner join 
+
+ HotelBooking as hb on hg.GuestID = hb.GuestID
+
+ --8.Digital team wants to analyze bookings done through the Website channel. 
+ --Show FirstName, LastName, BookingID, TotalAmount.
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ select hg.FirstName,hg.LastName,hb.BookingID,hb.TotalAmount    from HotelGuest as hg
+
+ inner join 
+
+ HotelBooking as hb on hg.GuestID = hb.GuestID
+
+ --9.Sales wants a list of guests who have ever booked a Suite, to upsell future suite offers. 
+ --Show distinct GuestID, FirstName, LastName.
+
+ select top 1 * from HotelGuest
+ select top 1 * from HotelBooking
+
+ select distinct(GuestID) as all_guest , FirstName, LastName from HotelGuest
+
+ --10.Management wants a summary of number of bookings by status (CheckedOut, Booked, Cancelled, etc.).
+
+ select count(BookingID) as booking_count , BookingStatus from HotelBooking group by BookingStatus
+
+
+ --11.Management wants total revenue per RoomType. Show RoomType and TotalRevenue.
+
+
+ select top 1 * from HotelGuest 
+ select top 1 * from HotelBooking 
+
+
+ select RoomType, sum(TotalAmount) as TotalRevenue  from HotelBooking group by RoomType
+
+ --12.For each BookingChannel, show number of bookings and average TotalAmount.
+
+ select  BookingChannel,avg(TotalAmount) as avg_total_amount,count(BookingID) as no_of_booking  from HotelBooking  group by BookingChannel
+
+ --13.Management wants guests whose total booked nights are more than 6. Show GuestID, FirstName, TotalBookedNights.
+
+ select top 1 * from HotelGuest 
+ select top 1 * from HotelBooking 
+
+ select sum(hb.Nights) as totalbookingnight,hg.FirstName  from HotelGuest as hg
+
+ join 
+
+ HotelBooking as hb on hg.GuestID = hb.GuestID
+ group by hg.FirstName having sum(hb.Nights) > 6
+
+ --14.For each LoyaltyLevel, find how many distinct guests and their total TotalSpend from HotelGuest table.
+
+ select top 1 * from HotelGuest 
+ select top 1 * from HotelBooking 
+
+ select distinct(FirstName) as guest , TotalSpend  from HotelGuest 
+
+ --15.Add a new column GSTNumber VARCHAR(20) NULL to HotelGuest.
+
+ alter table HotelGuest add  GSTNumber varchar(20)
+
+ select top 1 * from HotelGuest
+
+ --16.Change the data type of PhoneNumber in HotelGuest to VARCHAR(20).
+  
+  alter table HotelGuest alter column PhoneNumber VARCHAR(20)
+
+--17.Rename table HotelGuest to GuestMaster and then rename it back to HotelGuest.
+
+select top 1 * from HotelGuest 
+select top 1 * from HotelBooking 
+
+exec sp_rename 'HotelGuest','GuestMaster'
+
+--18.Update BookingStatus to 'CheckedOut' for all bookings where CheckOutDate is in the past and status is 
+--currently 'Booked' or 'CheckedIn'.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
